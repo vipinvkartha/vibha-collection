@@ -1,8 +1,8 @@
 import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
+import { writeFileSync, createWriteStream } from 'node:fs';
+import { join } from 'node:path';
 
-const UNSPLASH_ACCESS_KEY = 'your_unsplash_access_key';
+const UNSPLASH_ACCESS_KEY = 'your key';
 
 async function downloadImage(url: string, filepath: string) {
   const response = await axios({
@@ -13,7 +13,7 @@ async function downloadImage(url: string, filepath: string) {
 
   return new Promise((resolve, reject) => {
     response.data
-      .pipe(fs.createWriteStream(filepath))
+      .pipe(createWriteStream(filepath))
       .on('finish', resolve)
       .on('error', reject);
   });
@@ -33,7 +33,7 @@ async function getProductImages() {
     );
 
     for (const [index, photo] of response.data.results.entries()) {
-      const filepath = path.join(__dirname, `../public/products/${category}/${index + 1}.jpg`);
+      const filepath = join(__dirname, `../public/products/${category}/${index + 1}.jpg`);
       await downloadImage(photo.urls.regular, filepath);
       console.log(`Downloaded ${category} image ${index + 1}`);
     }

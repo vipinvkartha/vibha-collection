@@ -29,6 +29,19 @@ const templates: Record<string, ProductTemplate> = {
   // Add templates for other categories...
 };
 
+const UNSPLASH_URLS = {
+  'Hand Chains': [
+    'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80',
+    'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=500&q=80',
+    // Add more URLs for this category
+  ],
+  'Pendants': [
+    'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80',
+    // Add more URLs
+  ],
+  // Add URLs for other categories
+};
+
 function generateProduct(category: string, id: number): Product {
   const template = templates[category];
   const namePrefix = template.namePrefix[Math.floor(Math.random() * template.namePrefix.length)];
@@ -38,6 +51,9 @@ function generateProduct(category: string, id: number): Product {
   
   const price = Math.floor(Math.random() * (template.priceRange[1] - template.priceRange[0])) + template.priceRange[0];
   
+  const categoryUrls = UNSPLASH_URLS[category] || [];
+  const imageIndex = (id - 1) % categoryUrls.length;
+  
   return {
     id,
     name: `${namePrefix} ${nameSuffix} ${category}`,
@@ -46,7 +62,7 @@ function generateProduct(category: string, id: number): Product {
       .replace('{style}', style),
     price,
     category,
-    image: `/products/${category.toLowerCase().replace(' ', '-')}/${id}.jpg`,
+    image: categoryUrls[imageIndex] || 'https://images.unsplash.com/photo-default?w=500&q=80', // fallback image
     specifications: {
       material,
       style,
