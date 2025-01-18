@@ -1,6 +1,8 @@
-import fs from 'fs';
-import path from 'path';
+import { writeFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { Product } from '../src/types';
+
 
 interface ProductTemplate {
   namePrefix: string[];
@@ -66,7 +68,7 @@ const products = categories.reduce((acc, category) => {
 }, [] as Product[]);
 
 // Write to file
-fs.writeFileSync(
-  path.join(__dirname, '../src/data/generated-products.ts'),
+writeFileSync(
+  join(__dirname, '../src/data/generated-products.ts'),
   `export const products = ${JSON.stringify(products, null, 2)};`
 ); 
